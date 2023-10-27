@@ -23,17 +23,19 @@ public class SingleThreadedBlockingServer {
                 final InputStream in = socket.getInputStream();
                 final OutputStream out = socket.getOutputStream()
         ) {
-            //in.transferTo(out); // default buffer size is 8192
+            // default buffer size is 8192
+            //in.transferTo(out);
+
             int data;
-            while ((data = in.read()) != -1) { // read 1 byte at a time and -1 means EOF
-                out.write(transmogrify(data));
+            while ((data = in.read()) != -1) { // read one byte at a time and -1 means EOF
+                out.write(transformAndEcho(data));
             }
         } finally {
             System.out.printf("Disconnected from %s%n", socket);
         }
     }
 
-    private static int transmogrify(final int data) {
+    private static int transformAndEcho(final int data) {
         return Character.isLetter(data) ? data ^ ' ' : data;
     }
 }
