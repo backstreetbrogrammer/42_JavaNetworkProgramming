@@ -11,9 +11,9 @@ Tools used:
 
 ## Table of contents
 
-1. Introduction to Networking
-    - TCP/IP model
-2. HTTP Basics
+1. [Introduction to Networking](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-01-introduction-to-networking)
+    - [TCP/IP model](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#tcpip-model)
+2. [HTTP Basics](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-02-http-basics)
     - HTTP Server
     - HTTP Client
 3. Blocking Server
