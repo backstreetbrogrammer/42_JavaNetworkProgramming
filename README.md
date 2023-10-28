@@ -14,6 +14,7 @@ Tools used:
 1. [Introduction to Networking](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-01-introduction-to-networking)
     - [TCP/IP model](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#tcpip-model)
 2. [HTTP Basics](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-02-http-basics)
+    - Interview Problem 1 (JP Morgan Chase): What is HTTPS and how is it different from HTTP?
     - HTTP Server
     - HTTP Client
 3. Blocking Server
@@ -180,4 +181,140 @@ Encapsulation of application data descending through the layers:
 ---
 
 ## Chapter 02. HTTP Basics
+
+The **Hypertext Transfer Protocol (HTTP)** is an **application layer** protocol in the **Internet protocol suite model**
+for distributed, collaborative, hypermedia information systems.
+
+HTTP is the foundation of data communication for the **World Wide Web**, where hypertext documents include hyperlinks to
+other resources that the user can easily access, for example, by a mouse click or by tapping the screen in a web
+browser.
+
+HTTP functions as a **request–response protocol** in the client–server model.
+
+A **web browser**, for example, may be the client whereas a process, named **web server**, running on a computer hosting
+one or more websites may be the **server**. The **client** submits an HTTP request message to the **server**.
+
+The **server**, which provides resources such as HTML files and other content or performs other functions on behalf of
+the client, returns a **response** message to the **client**.
+
+The **response** contains completion status information about the request and may also contain requested content in its
+message body.
+
+![HTTP_flow](HTTP_flow.PNG)
+
+An example HTTP **request**:
+
+![HTTP_request](HTTP_request.PNG)
+
+An example **response**:
+
+![HTTP_response](HTTP_response.PNG)
+
+The first digit of the **status code** defines its class:
+
+- **1XX (informational)**: The request was received, continuing process.
+- **2XX (successful)**: The request was successfully received, understood, and accepted.
+- **3XX (redirection)**: Further action needs to be taken in order to complete the request.
+- **4XX (client error)**: The request contains bad syntax or cannot be fulfilled.
+- **5XX (server error)**: The server failed to fulfill an apparently valid request.
+
+**_HTTP Methods_**
+
+HTTP defines **methods** (sometimes referred to as **verbs**) to indicate the desired action to be performed on the
+identified resource.
+
+**GET**
+
+GET method requests that the target resource transfer a representation of its state.
+
+GET requests should only retrieve data and should have no other effect.
+
+For retrieving resources without making changes, **GET** is preferred over **POST**, as they can be addressed through a
+URL.
+
+This enables bookmarking and sharing and makes GET responses eligible for caching, which can save bandwidth.
+
+**POST**
+
+The POST method requests that the target resource process the representation enclosed in the request according to the
+semantics of the target resource.
+
+For example, it is used for posting a message to an Internet forum, subscribing to a mailing list, or completing an
+online shopping transaction.
+
+**PUT**
+
+The PUT method requests that the target resource create or update its state with the state defined by the representation
+enclosed in the request.
+
+A distinction from **POST** is that the client specifies the target location on the server.
+
+**DELETE**
+
+The DELETE method requests that the target resource delete its state.
+
+**_HTTP versions_**
+
+![HTTP_versions](HTTP_versions.PNG)
+
+HTTP **resources** are identified and located on the network by **Uniform Resource Locators (URLs)**, using the
+**Uniform Resource Identifiers (URI's)** schemes `http` and `https`.
+
+URIs are encoded as `hyperlinks` in HTML documents to form interlinked hypertext documents.
+
+- In `HTTP/1.0`, a **separate** TCP connection to the same server is made for every resource request
+- In `HTTP/1.1`,
+    - a TCP connection can be reused to make multiple resource requests (i.e., of HTML pages, frames,
+      images, scripts, stylesheets, etc.)
+    - communications therefore experience less latency as the establishment of TCP connections presents considerable
+      overhead, especially under high traffic conditions
+- In `HTTP/2`,
+    - use a **compressed binary** representation of metadata (HTTP headers) instead of a **textual** one, so that
+      headers require much less space
+    - use a single TCP/IP (usually encrypted) connection per accessed server domain instead of 2 to 8 TCP/IP connections
+    - use one or more **bidirectional** streams per TCP/IP connection in which HTTP requests and responses are broken
+      down and transmitted in small packets to almost solve the problem of the HOLB (head-of-line blocking)
+    - add a **push** capability to allow server application to send data to clients whenever new data is available
+      (without forcing clients to request periodically new data to server by using polling methods)
+- In `HTTP/3`,
+    - revision of previous `HTTP/2` in order to use `QUIC + UDP` transport protocols instead of TCP
+    - Before this version, TCP/IP connections were used, now only the IP layer (which UDP, like TCP, builds on) also
+      is used to slightly improve the average speed of communications and to avoid the occasional (very rare) problem of
+      TCP **connection congestion** that can temporarily block or slow down the data flow of all its streams (another
+      form of HOLB or "head of line blocking")
+
+![HTTP_versions_difference](HTTP_versions_difference.PNG)
+
+However, one can summarize the main difference between `HTTP/1.1` and `HTTP/2` is that `HTTP/2` supports
+**multiplexing**:
+
+![Multiplexing](Multiplexing.PNG)
+
+Similarly, the main difference between `HTTP/2` and `HTTP/3` is use of UDP and IP instead of TCP and the way
+security is handled:
+
+![HTTP2_vs_HTTP3](HTTP2_vs_HTTP3.PNG)
+
+### Interview Problem 1 (JP Morgan Chase): What is HTTPS and how is it different from HTTP?
+
+![HTTPS](HTTPS.PNG)
+
+Main difference between `HTTP` and `HTTPS`:
+
+![HTTP_vs_HTTPS](HTTP_vs_HTTPS.PNG)
+
+To show it in a diagram:
+
+![Detailed_HTTP_vs_HTTPS](Detailed_HTTP_vs_HTTPS.PNG)
+
+Short and sweet summary of differences:
+
+![Short_HTTP_vs_HTTPS](Short_HTTP_vs_HTTPS.PNG)
+
+### HTTP Server
+
+
+
+
+
 
