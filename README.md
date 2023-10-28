@@ -14,8 +14,8 @@ Tools used:
 1. [Introduction to Networking](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-01-introduction-to-networking)
     - [TCP/IP model](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#tcpip-model)
 2. [HTTP Basics](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-02-http-basics)
-    - Interview Problem 1 (JP Morgan Chase): What is HTTPS and how is it different from HTTP?
-    - HTTP Server
+    - [Interview Problem 1 (JP Morgan Chase): What is HTTPS and how is it different from HTTP?](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#interview-problem-1-jp-morgan-chase-what-is-https-and-how-is-it-different-from-http)
+    - [HTTP Server](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#http-server)
     - HTTP Client
 3. Blocking Server
     - Single-Threaded
@@ -217,6 +217,24 @@ The first digit of the **status code** defines its class:
 - **3XX (redirection)**: Further action needs to be taken in order to complete the request.
 - **4XX (client error)**: The request contains bad syntax or cannot be fulfilled.
 - **5XX (server error)**: The server failed to fulfill an apparently valid request.
+
+**_HTTP Headers_**
+
+HTTP header fields are a list of strings sent and received by both the client program and server on every HTTP request
+and response.
+
+HTTP headers let the client and the server pass additional information with an HTTP request or response.
+
+An HTTP header consists of its case-insensitive name followed by a colon (:), then by its value. Whitespace before the
+value is ignored.
+
+These headers are usually invisible to the end-user and are only processed or logged by the server and client
+applications.
+
+They define how information sent/received through the connection is encoded (as in Content-Encoding), the session
+verification and identification of the client (as in browser cookies, IP address, user-agent) or their anonymity
+thereof (VPN or proxy masking, user-agent spoofing), how the server should handle data (as in Do-Not-Track), the age
+(the time it has resided in a shared cache) of the document being downloaded, amongst others.
 
 **_HTTP Methods_**
 
