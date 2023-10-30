@@ -331,8 +331,186 @@ Short and sweet summary of differences:
 
 ### HTTP Server
 
+We are going to build an HTTP server which will be having two end points:
 
+- "`/task`": using HTTP **POST**
+- "`/status`": using HTTP **GET**
 
+End point `/task` will accept a list or array of numbers and return the product.
 
+End point `/status` will ensure the server is still alive.
 
+We will also use some **custom header keys** in both HTTP **Request** and HTTP **Response**.
+
+Complete code for our HTTP server:
+
+```java
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigInteger;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.concurrent.Executors;
+
+public class GuidemyWebServer {
+
+    private static final String TASK_ENDPOINT = "/task";
+    private static final String STATUS_ENDPOINT = "/status";
+    private static final String CUSTOM_HEADER_KEY1 = "Rishi-Test";
+    private static final String CUSTOM_HEADER_KEY2 = "Rishi-Debug";
+    private static final String CUSTOM_HEADER_RESPONSE_KEY = "Rishi-Debug-Info";
+
+    private final int port;
+    private HttpServer server;
+
+    public GuidemyWebServer(final int port) {
+        this.port = port;
+    }
+
+    public static void main(final String[] args) {
+        int serverPort = 8080;
+        if (args.length == 1) {
+            serverPort = Integer.parseInt(args[0]);
+        }
+
+        final GuidemyWebServer webServer = new GuidemyWebServer(serverPort);
+        webServer.startServer();
+
+        System.out.printf("Server is listening on port: %d%n", serverPort);
+    }
+
+    public void startServer() {
+        try {
+            server = HttpServer.create(new InetSocketAddress(port), 0);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        final HttpContext statusContext = server.createContext(STATUS_ENDPOINT);
+        final HttpContext taskContext = server.createContext(TASK_ENDPOINT);
+
+        statusContext.setHandler(this::handleStatusCheckRequest);
+        taskContext.setHandler(this::handleTaskRequest);
+
+        server.setExecutor(Executors.newFixedThreadPool(4));
+        server.start();
+    }
+
+    private void handleTaskRequest(final HttpExchange exchange) throws IOException {
+        if (!exchange.getRequestMethod().equalsIgnoreCase(HttpMethod.POST.getHttpMethod())) {
+            exchange.close();
+            return;
+        }
+
+        final Headers headers = exchange.getRequestHeaders();
+        if (headers.containsKey(CUSTOM_HEADER_KEY1)
+                && headers.get(CUSTOM_HEADER_KEY1).get(0).equalsIgnoreCase("true")) {
+            final String dummyResponse = "dummy\n";
+            sendResponse(dummyResponse.getBytes(StandardCharsets.UTF_8), exchange);
+            return;
+        }
+
+        boolean isDebugMode = false;
+        if (headers.containsKey(CUSTOM_HEADER_KEY2)
+                && headers.get(CUSTOM_HEADER_KEY2).get(0).equalsIgnoreCase("true")) {
+            isDebugMode = true;
+        }
+
+        final Instant start = Instant.now();
+        final byte[] requestBytes = exchange.getRequestBody().readAllBytes();
+        final byte[] responseBytes = calculateResponse(requestBytes);
+
+        if (isDebugMode) {
+            final String debugMsg = String.format("Operation took %d ns%n", Duration.between(start, Instant.now()).toNanos());
+            exchange.getResponseHeaders().put(CUSTOM_HEADER_RESPONSE_KEY, Collections.singletonList(debugMsg));
+        }
+
+        sendResponse(responseBytes, exchange);
+    }
+
+    private byte[] calculateResponse(final byte[] requestBytes) {
+        final String bodyString = new String(requestBytes);
+        final String[] stringNumbers = bodyString.split(",");
+        BigInteger result = BigInteger.ONE;
+        for (final String number : stringNumbers) {
+            final BigInteger bigInteger = new BigInteger(number);
+            result = result.multiply(bigInteger);
+        }
+
+        return String.format("Result of the multiplication is %s%n", result).getBytes(StandardCharsets.UTF_8);
+    }
+
+    private void handleStatusCheckRequest(final HttpExchange exchange) throws IOException {
+        if (!exchange.getRequestMethod().equalsIgnoreCase(HttpMethod.GET.getHttpMethod())) {
+            exchange.close();
+            return;
+        }
+
+        final String responseMessage = "Server is alive";
+        sendResponse(responseMessage.getBytes(StandardCharsets.UTF_8), exchange);
+    }
+
+    private void sendResponse(final byte[] responseBytes, final HttpExchange exchange) throws IOException {
+        exchange.sendResponseHeaders(200, responseBytes.length);
+        try (final OutputStream os = exchange.getResponseBody()) {
+            os.write(responseBytes);
+            os.flush();
+        }
+    }
+}
+```
+
+Helper `enum` used in the server code:
+
+```java
+public enum HttpMethod {
+
+    GET("GET"),
+    POST("POST");
+
+    private String httpMethod;
+
+    HttpMethod(final String httpMethod) {
+        this.httpMethod = httpMethod;
+    }
+
+    public String getHttpMethod() {
+        return httpMethod;
+    }
+}
+```
+
+To test our server, we will use `cURL` on command line or GIT Bash.
+
+**Test Case 1: Running GET request with invalid end point**
+
+`curl --request GET -v localhost:8080/anything`
+
+Output:
+
+![testcase1_server](testcase1_server.PNG)
+
+**Test Case 2: Running GET status request**
+
+`curl --request GET -v localhost:8080/status`
+
+Output:
+
+![testcase2_server](testcase2_server.PNG)
+
+**Test Case 3: Running POST task request**
+
+`curl --request POST -v --data '50,80,100' localhost:8080/task`
+
+Output:
+
+![testcase3_server](testcase3_server.PNG)
 
