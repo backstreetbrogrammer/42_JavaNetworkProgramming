@@ -84,7 +84,7 @@ public class GuidemyWebServer {
         final byte[] responseBytes = calculateResponse(requestBytes);
 
         if (isDebugMode) {
-            final String debugMsg = String.format("Operation took %d ns%n", Duration.between(start, Instant.now()).toNanos());
+            final String debugMsg = String.format("Operation took %d ns", Duration.between(start, Instant.now()).toNanos());
             exchange.getResponseHeaders().put(CUSTOM_HEADER_RESPONSE_KEY, Collections.singletonList(debugMsg));
         }
 

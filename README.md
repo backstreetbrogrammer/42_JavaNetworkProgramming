@@ -16,7 +16,7 @@ Tools used:
 2. [HTTP Basics](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-02-http-basics)
     - [Interview Problem 1 (JP Morgan Chase): What is HTTPS and how is it different from HTTP?](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#interview-problem-1-jp-morgan-chase-what-is-https-and-how-is-it-different-from-http)
     - [HTTP Server](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#http-server)
-    - HTTP Client
+    - [HTTP Client](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#http-client)
 3. Blocking Server
     - Single-Threaded
     - Multi-Threaded
@@ -429,7 +429,7 @@ public class GuidemyWebServer {
         final byte[] responseBytes = calculateResponse(requestBytes);
 
         if (isDebugMode) {
-            final String debugMsg = String.format("Operation took %d ns%n", Duration.between(start, Instant.now()).toNanos());
+            final String debugMsg = String.format("Operation took %d ns", Duration.between(start, Instant.now()).toNanos());
             exchange.getResponseHeaders().put(CUSTOM_HEADER_RESPONSE_KEY, Collections.singletonList(debugMsg));
         }
 
@@ -513,4 +513,22 @@ Output:
 Output:
 
 ![testcase3_server](testcase3_server.PNG)
+
+**Test Case 4: Running POST task request with custom test header**
+
+`curl --request POST -v --header "Rishi-Test: true" --data '50,80,100' localhost:8080/task`
+
+Output:
+
+![testcase4_server](testcase4_server.PNG)
+
+**Test Case 5: Running POST task request with custom debug header**
+
+`curl --request POST -v --header "Rishi-Debug: true" --data '50,80,100' localhost:8080/task`
+
+Output:
+
+![testcase5_server](testcase5_server.PNG)
+
+### HTTP Client
 
