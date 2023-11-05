@@ -24,7 +24,6 @@ public class GuidemyWebServer {
     private static final String CUSTOM_HEADER_RESPONSE_KEY = "Rishi-Debug-Info";
 
     private final int port;
-    private HttpServer server;
 
     public GuidemyWebServer(final int port) {
         this.port = port;
@@ -43,6 +42,7 @@ public class GuidemyWebServer {
     }
 
     public void startServer() {
+        final HttpServer server;
         try {
             server = HttpServer.create(new InetSocketAddress(port), 0);
         } catch (final IOException e) {

@@ -11,7 +11,7 @@ public class SingleThreadedBlockingServer {
     public static void main(final String[] args) throws IOException {
         final ServerSocket serverSocket = new ServerSocket(8080);
         while (true) {
-            final Socket socket = serverSocket.accept(); // this blocks and socket can never be null
+            final Socket socket = serverSocket.accept(); // blocks and socket can never be null
             handle(socket);
         }
     }

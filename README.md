@@ -17,14 +17,6 @@ Tools used:
     - [Interview Problem 1 (JP Morgan Chase): What is HTTPS and how is it different from HTTP?](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#interview-problem-1-jp-morgan-chase-what-is-https-and-how-is-it-different-from-http)
     - [HTTP Server](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#http-server)
     - [HTTP Client](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#http-client)
-3. Blocking Server
-    - Single-Threaded
-    - Multi-Threaded
-    - ExecutorService
-    - Java NIO
-4. Non-Blocking Server
-    - Polling
-    - Selector
 
 ---
 
@@ -531,4 +523,110 @@ Output:
 ![testcase5_server](testcase5_server.PNG)
 
 ### HTTP Client
+
+Java 11 supports HTTP client creation. It supports both HTTP 1.1 and HTTP 2.
+
+Here is our `GuidemyWebClient` class:
+
+```java
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.concurrent.CompletableFuture;
+
+public class GuidemyWebClient {
+
+    private final HttpClient client;
+
+    public GuidemyWebClient() {
+        this.client = HttpClient.newBuilder()
+                                .version(HttpClient.Version.HTTP_1_1)
+                                .build();
+    }
+
+    public CompletableFuture<String> sendTask(final String url, final byte[] requestPayload) {
+        final HttpRequest request = HttpRequest.newBuilder()
+                                               .POST(HttpRequest.BodyPublishers.ofByteArray(requestPayload))
+                                               .uri(URI.create(url))
+                                               .build();
+
+        return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                     .thenApply(HttpResponse::body);
+    }
+
+}
+```
+
+Client is sending the HTTP POST request method **asynchronously** to the server and returning `HttpResponse` body
+`String` wrapped inside `CompletableFuture<String>`.
+
+Let's create a helper program to collect all the client requests and get all the results.
+
+```java
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class Accumulator {
+
+    private final GuidemyWebClient webClient;
+
+    public Accumulator() {
+        this.webClient = new GuidemyWebClient();
+    }
+
+    public List<String> sendTasksToWorkers(final List<String> workersAddresses, final List<String> tasks) {
+        final CompletableFuture<String>[] futures = new CompletableFuture[workersAddresses.size()];
+
+        for (int i = 0; i < workersAddresses.size(); i++) {
+            final String workerAddress = workersAddresses.get(i);
+            final String task = tasks.get(i);
+
+            final byte[] requestPayload = task.getBytes();
+            futures[i] = webClient.sendTask(workerAddress, requestPayload);
+        }
+
+        return Stream.of(futures)
+                     .map(CompletableFuture::join)
+                     .collect(Collectors.toList());
+    }
+}
+```
+
+For the demo servers run, we will run two instances of `GuidemyWebServer` running on ports `8081` and `8082`.
+
+![GuidemyWebServer8081](GuidemyWebServer8081.PNG)
+
+![GuidemyWebServer8082](GuidemyWebServer8082.PNG)
+
+For the demo client run, we will use this `Main` class:
+
+```java
+import java.util.List;
+
+public class Main {
+
+    private static final String WORKER_ADDRESS_1 = "http://localhost:8081/task";
+    private static final String WORKER_ADDRESS_2 = "http://localhost:8082/task";
+
+    public static void main(final String[] args) {
+        final Accumulator accumulator = new Accumulator();
+        final String task1 = "10,200";
+        final String task2 = "123456789,100000000000000,700000002342343";
+
+        final List<String> results = accumulator.sendTasksToWorkers(List.of(WORKER_ADDRESS_1, WORKER_ADDRESS_2),
+                                                                    List.of(task1, task2));
+
+        for (final String result : results) {
+            System.out.println(result);
+        }
+    }
+}
+```
+
+Here is what the output will look like:
+
+![GuidemyWebClient](GuidemyWebClient.PNG)
 
