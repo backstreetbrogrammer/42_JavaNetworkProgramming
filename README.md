@@ -4,7 +4,7 @@
 
 Tools used:
 
-- JDK 11
+- JDK 21
 - Maven
 - JUnit 5, Mockito
 - IntelliJ IDE
@@ -17,6 +17,7 @@ Tools used:
     - [Interview Problem 1 (JP Morgan Chase): What is HTTPS and how is it different from HTTP?](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#interview-problem-1-jp-morgan-chase-what-is-https-and-how-is-it-different-from-http)
     - [HTTP Server](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#http-server)
     - [HTTP Client](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#http-client)
+3. TCP Socket Client-Servers
 
 ---
 
@@ -630,3 +631,6 @@ Here is what the output will look like:
 
 ![GuidemyWebClient](GuidemyWebClient.PNG)
 
+---
+
+## Chapter 03. TCP Socket Client-Servers
