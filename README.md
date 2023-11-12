@@ -18,9 +18,9 @@ Tools used:
     - [HTTP Server](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#http-server)
     - [HTTP Client](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#http-client)
 3. [TCP Client and Server](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-03-tcp-client-and-server)
-    - [Limitation of current server applications](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-03-tcp-client-and-server)
-    - [Blocking, Non-Blocking, Asynchronous Server](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-03-tcp-client-and-server)
-    - [Virtual Threads](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-03-tcp-client-and-server)
+    - [Limitation of current server applications](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#limitation-of-current-server-applications)
+    - [Blocking, Non-Blocking, Asynchronous Server](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#blocking-non-blocking-asynchronous-server)
+    - [Virtual Threads](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#virtual-threads)
 4. [UDP Client and Server](https://github.com/backstreetbrogrammer/42_JavaNetworkProgramming#chapter-04-udp-client-and-server)
 
 ---
